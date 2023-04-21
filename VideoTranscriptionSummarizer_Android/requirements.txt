@@ -1,0 +1,8 @@
+Flask
+numpy
+pandas
+sklearn
+nltk
+gensim
+youtube_transcript_api
+transformers
