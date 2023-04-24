@@ -52,7 +52,7 @@ def hello_world():
         sentence_scores = np.array(sentence_vectors.sum(axis=1)).ravel()
 
         # Sanity checkup
-        print(len(l) == len(sentence_scores))
+#         print(len(l) == len(sentence_scores))
         N = 5
         top_n_sentences = [l[ind] for ind in np.argsort(sentence_scores, axis=0)[::-1][:N]]
 
