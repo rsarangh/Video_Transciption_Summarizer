@@ -1,4 +1,4 @@
 Flask
 numpy
-sklearn.feature_extraction.text
+sklearn
 youtube_transcript_api
