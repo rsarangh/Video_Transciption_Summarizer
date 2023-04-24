@@ -1,4 +1,4 @@
-Flask
+Flask~=2.2.3
 numpy
-scikit-learn
+scikit-learn~=1.2.2
 youtube_transcript_api
