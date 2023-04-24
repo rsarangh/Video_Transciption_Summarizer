@@ -1,4 +1,4 @@
 Flask
 numpy
-sklearn
+scikit-learn
 youtube_transcript_api
