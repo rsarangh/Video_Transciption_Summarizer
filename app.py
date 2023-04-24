@@ -14,6 +14,8 @@ l = []
 app = Flask(__name__)
 
 
+
+
 @app.route('/', methods=['POST'])
 def hello_world():
 
@@ -66,6 +68,11 @@ def hello_world():
 
     return jsonify({'summary': result})
 return jsonify({'summary': 'Error ahn mwone'})
+
+
+@app.route('/about')
+def index():
+    return "Hello world about"
 
 
 
