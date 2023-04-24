@@ -1,4 +1,4 @@
 Flask
 numpy
-TfidfVectorizer
-YouTubeTranscriptApi
+sklearn.feature_extraction.text
+youtube_transcript_api
