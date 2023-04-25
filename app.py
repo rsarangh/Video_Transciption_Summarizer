@@ -30,6 +30,18 @@ def hello_world():
         for m in av:
             main_txt = (m['text'])
             t.append(main_txt)
+            
+        # for transcription
+        tt = ' '.join(t)
+        stt = tt.split(' ')
+        vtt=[]
+        for s in stt:
+            if '[' and 'Music' in s:
+                vtt.append("[Music is playing]")
+            else:
+                vtt.append(s)
+
+        transcription = ' '.join(vtt)
 
         l = []
         for m in t:
@@ -66,7 +78,7 @@ def hello_world():
 
         result = ' '.join(top_n_sentences)
 
-        return jsonify({'summary': result})
+        return jsonify({'summary': result, 'transcription': transcription})
 
     return jsonify({'summary': 'Error ahn mwone'})
 
