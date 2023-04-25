@@ -19,7 +19,7 @@ def hello_world():
         
         
         # extracting id
-        pattern = r"(?<=v=)[a-zA-Z0-9_-]+(?=&|\?|$)"
+        pattern = r"((?<=(v|V)/)|(?<=be/)|(?<=(\?|\&)v=)|(?<=embed/))([\w-]+)"
         match = re.search(pattern, title)
         if match:
             title = match.group()
