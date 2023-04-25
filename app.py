@@ -2,6 +2,7 @@ from flask import Flask, request, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
+import re
 
 
 l = []
@@ -15,6 +16,13 @@ def hello_world():
         mydict = request.form
         # title = request.form.get('title')
         title = (mydict['video_id'])
+        
+        
+        # extracting id
+        pattern = r"(?<=v=)[a-zA-Z0-9_-]+(?=&|\?|$)"
+        match = re.search(pattern, title)
+        if match:
+            title = match.group()
 
 
         av = YouTubeTranscriptApi.get_transcript(title , languages=['en'])
