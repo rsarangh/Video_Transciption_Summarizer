@@ -1,6 +1,6 @@
 # Video Transcription Summarizer
 
-![GitHub](https://img.shields.io/github/license/rsarangh/your-repo.svg)
+![GitHub](https://img.shields.io/github/license/rsarangh)
 
 The Video Transcription Summarizer is a Flask-based machine learning web application that allows users to obtain a summary or full transcription of a YouTube video. The application is designed to work with videos that have English captions available.
 
@@ -23,14 +23,7 @@ The Video Transcription Summarizer is a Flask-based machine learning web applica
 ## Prerequisites
 
 To run this application locally, you need to have the following dependencies installed:
-
-- Python 3.6 or above
-- Flask
-- TensorFlow
-- PyTorch
-- Transformers
-- Azure SDK
-- Other required Python packages (specified in `requirements.txt`)
+required Python packages (specified in `requirements.txt`)
 
 ## Usage
 
