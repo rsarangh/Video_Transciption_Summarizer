@@ -2,7 +2,8 @@ from flask import Flask, request, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
-import re
+from pytube import extract
+# import re
 
 
 l = []
@@ -19,10 +20,13 @@ def hello_world():
         
         
         # extracting id
-        pattern = r"((?<=(v|V)/)|(?<=be/)|(?<=(\?|\&)v=)|(?<=embed/))([\w-]+)"
-        match = re.search(pattern, title)
-        if match:
-            title = match.group()
+        title = extract.video_id(title)
+        
+#         pattern = r"((?<=(v|V)/)|(?<=be/)|(?<=(\?|\&)v=)|(?<=embed/))([\w-]+)"
+#         match = re.search(pattern, title)
+#         if match:
+#             title = match.group()
+           
 
 
         av = YouTubeTranscriptApi.get_transcript(title , languages=['en'])
