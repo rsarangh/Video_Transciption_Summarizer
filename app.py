@@ -1,4 +1,6 @@
 import os
+from http.cookiejar import MozillaCookieJar
+import requests
 from flask import Flask, request, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
 from openai import OpenAI
@@ -17,6 +19,7 @@ GEMINI_MODEL = os.getenv("GEMINI_MODEL", "")
 AI_TIMEOUT_SECONDS = int(os.getenv("AI_TIMEOUT_SECONDS", "45"))
 MAX_TRANSCRIPT_CHARS = int(os.getenv("MAX_TRANSCRIPT_CHARS", "15000"))
 MAX_GEMINI_MODELS_TO_TRY = int(os.getenv("MAX_GEMINI_MODELS_TO_TRY", "6"))
+YOUTUBE_COOKIES_PATH = os.getenv("YOUTUBE_COOKIES_PATH", "")
 
 @app.route('/', methods=['GET'])
 def root_get():
@@ -131,9 +134,21 @@ def summarize_with_gemini(text):
 
     raise RuntimeError(f"No Gemini model could generate content. Last error: {last_error}")
 
+def build_cookie_session():
+    """Load a requests session with YouTube cookies to bypass cloud IP blocking."""
+    if not YOUTUBE_COOKIES_PATH or not os.path.exists(YOUTUBE_COOKIES_PATH):
+        return None
+
+    jar = MozillaCookieJar(YOUTUBE_COOKIES_PATH)
+    jar.load(ignore_discard=True, ignore_expires=True)
+    session = requests.Session()
+    session.cookies = jar
+    return session
+
 def get_transcript_text(video_id):
     """Fetch transcript text across youtube_transcript_api versions."""
     preferred_languages = ['en', 'hi', 'ml', 'es']
+    cookie_session = build_cookie_session()
 
     if hasattr(YouTubeTranscriptApi, 'get_transcript'):
         try:
@@ -142,7 +157,7 @@ def get_transcript_text(video_id):
             transcript_list = YouTubeTranscriptApi.get_transcript(video_id)
         return " ".join([snippet['text'] for snippet in transcript_list])
 
-    api = YouTubeTranscriptApi()
+    api = YouTubeTranscriptApi(http_client=cookie_session) if cookie_session else YouTubeTranscriptApi()
     try:
         transcript = api.fetch(video_id, languages=preferred_languages)
     except Exception:
@@ -165,8 +180,9 @@ def handle_summarization():
         # 2. Extract Transcript
         try:
             full_text = get_transcript_text(video_id)
-        except Exception:
-            return jsonify({'summary': "Captions are disabled for this video.", 'transcription': ""})
+        except Exception as e:
+            print(f"Transcript fetch failed for video_id={video_id}: {e}")
+            return jsonify({'summary': "Captions are disabled for this video.", 'transcription': "", 'transcript_error': str(e)})
 
         # 3. Summarization with Fallback Logic
         text_for_summary = full_text[:MAX_TRANSCRIPT_CHARS]
